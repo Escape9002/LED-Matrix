@@ -1,3 +1,4 @@
+//------------------------------------------------------------------------------------------ Libraries
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include <avr/power.h>
@@ -7,8 +8,7 @@
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
-int delayval = 10;
-
+//------------------------------------------------------------------------------------------ matrix Functions
 
 int generatepos(int x, int y){
 
@@ -28,11 +28,11 @@ void drawPoint(int* pos, int* rgb){
 	pixels.show();
 }
 
+//------------------------------------------------------------------------------------------ Joystick
 
 
-
-int pos[] = {6,6};
-int rgb[] = {255,0,0};
+int pos[] = {6,6}; // middle
+int rgb[] = {255,0,0}; // red
 
 void cursor(int* cursor){
 	for(int i = 0; i <2; i++){
@@ -52,6 +52,7 @@ void cursor(int* cursor){
 	}
 }
 
+//------------------------------------------------------------------------------------------ debugging funcs
 void debug(){
 for(int i = 0; i< 13; i++){
 		pos[0] = i;
@@ -60,6 +61,9 @@ for(int i = 0; i< 13; i++){
 		delay(100);
 	}
 }
+
+//------------------------------------------------------------------------------------------ setup
+
 
 int fps;
 long timer = millis()+ fps;
@@ -71,7 +75,7 @@ void setup()
 	fps = 100;
 }
 
-
+//------------------------------------------------------------------------------------------ loop
 void loop()
 {
 
