@@ -53,13 +53,16 @@ int rgb[] = {0,0,255};
 
 void loop()
 {
-	// Begin Move-Check
+// Weg Schreiben	
 	if((weg[wegindex -1][0] != courser[0]) || (weg[wegindex -1][1] != courser[1] )){
 		weg[wegindex][0] = courser[0];
 		weg[wegindex][1] = courser[1];
 	}
+//Kollision
+//	for(int f = 0; f y)
+//	for(int i =0; i < 12; i++)
 
-
+// Begin Move-Check
 	if(analogRead(yPin) != 511){
 		if(analogRead(yPin) < 411){
 			if(courser[1] != 11){
