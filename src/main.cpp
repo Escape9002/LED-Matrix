@@ -8,11 +8,22 @@
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 int delayval = 10;
+int yPin = A4;
+int xPin = A2;
+
+int courser[] = {5,5};
+int weg[144][2];
+int wegindex = 1;
+
+weg[0][0] = courser[0];
+weg[0][1] = courser[1];
 
 void setup()
 {
 	pixels.begin();
 	//Serial.begin(9600);
+	
+	pinMode(5,INPUT);
 }
 
 int generatepos(int x, int y){
@@ -33,25 +44,53 @@ void drawPoint(int* pos, int* rgb){
 	pixels.show();
 }
 
-int * move(int * courser){
-	return courser;
-}
+
 
 int pos[] = {72,72};
 int rgb[] = {0,0,255};
 
 void loop()
 {
-	int x = analogRead(A4);
-	int y = analogRead(A2);
+	// Begin Move-Check
 
-	if((x-20) < x || x < (x+20)){
-
-	}else{
-		pos[0] = pos[0] - map(x,0,1024,-72,72);
-		pos[1] = pos[1] - map(y,0,1024,-72,72);
-		drawPoint(pos, rgb);
+	if(analogRead(yPin) != 511){
+		if(analogRead(yPin) < 411){
+			if(courser[1] != 11){
+				courser[1] ++;
+				delay(500);
+			}
+		}
+		if(analogRead(yPin) > 611){
+			if(courser[1] != 0){
+				courser[1] --;
+				delay(500);
+			}
+		}
 	}
+	if(analogRead(xPin) != 526){
+		if(analogRead(xPin) < 426){
+			if(courser[0] != 11){
+				courser[0] ++;
+				delay(500);
+			}
+		}
+		if(analogRead(xPin) > 611){
+			if(courser[0] != 0){
+				courser[0] --;
+				delay(500);
+			}
+		}
+	}	
+
+	drawPoint(courser,rgb);
+
+	pixels.show();
+	// End Move-Check
+
+
+
+
+
 	
 	
 }
