@@ -15,8 +15,7 @@ int courser[] = {5,5};
 int weg[144][2];
 int wegindex = 1;
 
-weg[0][0] = courser[0];
-weg[0][1] = courser[1];
+
 
 void setup()
 {
@@ -24,6 +23,9 @@ void setup()
 	//Serial.begin(9600);
 	
 	pinMode(5,INPUT);
+
+	weg[0][0] = courser[0];
+	weg[0][1] = courser[1];
 }
 
 int generatepos(int x, int y){
@@ -52,6 +54,11 @@ int rgb[] = {0,0,255};
 void loop()
 {
 	// Begin Move-Check
+	if((weg[wegindex -1][0] != courser[0]) || (weg[wegindex -1][1] != courser[1] )){
+		weg[wegindex][0] = courser[0];
+		weg[wegindex][1] = courser[1];
+	}
+
 
 	if(analogRead(yPin) != 511){
 		if(analogRead(yPin) < 411){
