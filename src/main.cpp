@@ -9,11 +9,6 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ80
 
 int delayval = 10;
 
-void setup()
-{
-	pixels.begin();
-	//Serial.begin(9600);
-}
 
 int generatepos(int x, int y){
 
@@ -33,25 +28,62 @@ void drawPoint(int* pos, int* rgb){
 	pixels.show();
 }
 
-int * move(int * courser){
-	return courser;
+
+
+
+int pos[] = {6,6};
+int rgb[] = {255,0,0};
+
+void cursor(int* cursor){
+	for(int i = 0; i <2; i++){
+	if(cursor[i] < 200){
+
+		pos[i] = pos[i] + 1;
+		if(pos[i] > 11){
+			pos[i] = 11;
+		}
+	}else if(cursor[i] > 800){
+
+		pos[i] = pos[i] - 1;
+		if(pos[i] < 0){
+			pos[i] = 0;
+		}
+	}
+	}
 }
 
-int pos[] = {72,72};
-int rgb[] = {0,0,255};
+void debug(){
+for(int i = 0; i< 13; i++){
+		pos[0] = i;
+		pos[1] = i;
+		drawPoint(pos, rgb);
+		delay(100);
+	}
+}
+
+int fps;
+long timer = millis()+ fps;
+void setup()
+{
+	pixels.begin();
+	pixels.clear();
+	
+	fps = 100;
+}
+
 
 void loop()
 {
-	int x = analogRead(A4);
-	int y = analogRead(A2);
 
-	if((x-20) < x || x < (x+20)){
+	if(timer < millis()){
 
-	}else{
-		pos[0] = pos[0] - map(x,0,1024,-72,72);
-		pos[1] = pos[1] - map(y,0,1024,-72,72);
+		int joyStick[] = {analogRead(A2), analogRead(A4)};
+		cursor(joyStick);
+
 		drawPoint(pos, rgb);
+
+
+		timer = millis() + fps;
 	}
-	
-	
+
 }
