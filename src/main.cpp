@@ -13,7 +13,9 @@ int xPin = A2;
 
 int courser[] = {5,5};
 int weg[144][2];
-int wegindex = 1;
+int wegindex = 0;
+int rgb[] = {0,255,0};
+boolean isrunning =true;
 
 
 
@@ -24,8 +26,7 @@ void setup()
 	
 	pinMode(5,INPUT);
 
-	weg[0][0] = courser[0];
-	weg[0][1] = courser[1];
+
 }
 
 int generatepos(int x, int y){
@@ -47,33 +48,25 @@ void drawPoint(int* pos, int* rgb){
 }
 
 
-
-int pos[] = {72,72};
-int rgb[] = {0,0,255};
-
 void loop()
 {
-// Weg Schreiben	
-	if((weg[wegindex -1][0] != courser[0]) || (weg[wegindex -1][1] != courser[1] )){
-		weg[wegindex][0] = courser[0];
-		weg[wegindex][1] = courser[1];
-	}
-//Kollision
-//	for(int f = 0; f y)
-//	for(int i =0; i < 12; i++)
 
+
+
+
+while(isrunning == true){
 // Begin Move-Check
 	if(analogRead(yPin) != 511){
 		if(analogRead(yPin) < 411){
 			if(courser[1] != 11){
 				courser[1] ++;
-				delay(500);
+				
 			}
 		}
 		if(analogRead(yPin) > 611){
 			if(courser[1] != 0){
 				courser[1] --;
-				delay(500);
+				
 			}
 		}
 	}
@@ -81,13 +74,13 @@ void loop()
 		if(analogRead(xPin) < 426){
 			if(courser[0] != 11){
 				courser[0] ++;
-				delay(500);
+				
 			}
 		}
 		if(analogRead(xPin) > 611){
 			if(courser[0] != 0){
 				courser[0] --;
-				delay(500);
+				
 			}
 		}
 	}	
@@ -95,12 +88,31 @@ void loop()
 	drawPoint(courser,rgb);
 
 	pixels.show();
+	delay(100);
 	// End Move-Check
 
-
-
-
-
+pixels.show();
+// Weg Schreiben	
+	if((weg[wegindex][0] != courser[0]) || (weg[wegindex][1] != courser[1] )){
+		weg[wegindex+1][0] = courser[0];
+		weg[wegindex+1][1] = courser[1];
+	}
+//Kollision
+ 	for(int f = 0; f <= wegindex;  f++ ){
+		if((weg[f][0] == courser[0]) && (weg[f][1]== courser [1])){
+			isrunning =false;
+			pixels.clear();
+		}
+	}
+}
+while(isrunning ==false){
+	for(int i =0; i < 25; i++){
+	pixels.fill(pixels.Color(255,0,0),0,144);pixels.show();
+	delay(100);
+	pixels.clear();pixels.show();
+	delay(100);
+	}
 	
-	
+
+}
 }
