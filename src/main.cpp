@@ -59,6 +59,13 @@ void cursor(int *cursor)
 }
 
 //------------------------------------------------------------------------------------------ programms
+//--------------------------------------------------- set Color
+void setColor(int r, int g, int b){
+    rgb[0] = r;
+	rgb[1] = g;
+	rgb[2] = b;
+}
+
 //--------------------------------------------------- draw point
 void drawPoint(int *pos, int *rgb)
 {
@@ -86,6 +93,8 @@ void drawRainbow(int *pos)
 }
 
 //------------------------------------------------------------------------------------------ debugging funcs
+#define DEBUG 0
+
 void debug()
 {
 	for (int i = 0; i < 13; i++)
@@ -98,12 +107,14 @@ void debug()
 }
 
 //------------------------------------------------------------------------------------------ change prog
-int prog;
-int maxProgramms;
+int prog = 0;
+int maxProgramms =2;
+volatile byte state = LOW;
 
 void changeProg()
 {
-	if (prog < maxProgramms)
+	if(state){
+	if (prog < (maxProgramms-1))
 	{
 		prog++;
 	}
@@ -111,23 +122,34 @@ void changeProg()
 	{
 		prog = 0;
 	}
+
+	state = false;
+	}else{
+		state = true;
+	}
+	
 }
 
 //------------------------------------------------------------------------------------------ setup
-const byte interruptPin = 5; // interruptPin
-volatile byte state = LOW;
+const byte interruptPin = 2; // interruptPin
+
 
 int fps;
 long timer = millis() + fps;
 void setup()
 {
 
-	maxProgramms = 2;
-	pinMode(interruptPin, INPUT_PULLUP);
+	#ifdef DEBUG
+		Serial.begin(9600);
+	#endif
+
+	maxProgramms = 1;
+	pinMode(interruptPin, INPUT);
 	attachInterrupt(digitalPinToInterrupt(interruptPin), changeProg, CHANGE);
 
 	pixels.begin();
 	pixels.clear();
+	pixels.setBrightness(25);
 
 	fps = 100;
 }
@@ -135,6 +157,11 @@ void setup()
 //------------------------------------------------------------------------------------------ loop
 void loop()
 {
+	#ifdef DEBUG
+		bool btn = digitalRead(5);
+    	bool val = digitalRead(2);
+    	Serial.println(btn + " | " + val);
+	#endif
 
 	if (timer < millis())
 	{
@@ -145,11 +172,12 @@ void loop()
 		switch (prog)
 		{
 		case 0:
+			setColor(255,0,0);
 			drawPoint(pos, rgb);
 			break;
 
 		case 1:
-			drawRainbow(pos, fps);
+			drawRainbow(pos);
 			break;
 		}
 		timer = millis() + fps;
