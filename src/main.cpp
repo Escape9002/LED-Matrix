@@ -10,7 +10,7 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ80
 
 //------------------------------------------------------------------------------------------ matrix Functions
 
-int generatepos(int x, int y)
+int generatepos(byte x, byte y)
 {
 
 	if (y % 2 == 1)
@@ -23,19 +23,19 @@ int generatepos(int x, int y)
 	}
 }
 
-void matrix(int *pos, int *rgb)
+void matrix(byte *pos, byte *rgb)
 {
 	pixels.setPixelColor(generatepos(pos[0], pos[1]), pixels.Color(rgb[0], rgb[1], rgb[2]));
 }
 
 //------------------------------------------------------------------------------------------ Joystick
 
-int pos[] = {6, 6};		 // middle
-int rgb[] = {255, 0, 0}; // red
+byte pos[] = {6, 6};		 // middle
+byte rgb[] = {255, 0, 0}; // red
 
 void cursor(int *cursor)
 {
-	for (int i = 0; i < 2; i++)
+	for (byte i = 0; i < 2; i++)
 	{
 		if (cursor[i] < 200)
 		{
@@ -60,14 +60,14 @@ void cursor(int *cursor)
 
 //------------------------------------------------------------------------------------------ programms
 //--------------------------------------------------- set Color
-void setColor(int r, int g, int b){
+void setColor(byte r, byte g, byte b){
     rgb[0] = r;
 	rgb[1] = g;
 	rgb[2] = b;
 }
 
 //--------------------------------------------------- draw point
-void drawPoint(int *pos, int *rgb)
+void drawPoint(byte *pos, byte *rgb)
 {
 	pixels.setPixelColor(generatepos(pos[0], pos[1]), pixels.Color(rgb[0], rgb[1], rgb[2]));
 	pixels.show();
@@ -75,13 +75,13 @@ void drawPoint(int *pos, int *rgb)
 
 //--------------------------------------------------- draw rainbow point
 
-void drawRainbow(int *pos)
+void drawRainbow(byte *pos)
 {
 	rgb[0] = rgb[0] + 5;
 	rgb[1] = rgb[1] + 25;
 	rgb[2] = rgb[2] + 50;
 
-	for (int i = 3; i > 0; i--)
+	for (byte i = 3; i > 0; i--)
 	{
 		if (rgb[i] > 255)
 		{
@@ -97,7 +97,7 @@ void drawRainbow(int *pos)
 
 void debug()
 {
-	for (int i = 0; i < 13; i++)
+	for (byte i = 0; i < 13; i++)
 	{
 		pos[0] = i;
 		pos[1] = i;
@@ -135,7 +135,7 @@ const byte interruptPin = 2; // interruptPin
 
 
 int fps;
-long timer = millis() + fps;
+unsigned long timer;
 void setup()
 {
 
