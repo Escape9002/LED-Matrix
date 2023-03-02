@@ -38,7 +38,7 @@ void matrix(byte *pos, byte *rgb)
 byte pos[] = {6, 6};	  // middle
 byte rgb[] = {255, 0, 0}; // red
 
-void cursor(int *cursor)
+void setCursorPos(int *cursor)
 {
 	for (byte i = 0; i < 2; i++)
 	{
@@ -53,9 +53,11 @@ void cursor(int *cursor)
 		}
 		else if (cursor[i] > 800)
 		{
-
-			pos[i] = pos[i] - 1;
-			if (pos[i] < 0)
+			if (pos[i] != 0)
+			{
+				pos[i] = pos[i] - 1;
+			}
+			else
 			{
 				pos[i] = 0;
 			}
@@ -138,15 +140,47 @@ void changeProg()
 	}
 }
 
+//------------------------------------------------------------------------------------------ check btn press
+byte btn_counter = 0;
+
+bool button(int sw_val)
+{
+	if (sw_val < 10)
+	{
+		btn_counter++;
+
+#if DEBUG
+		Serial.println(btn_counter);
+#endif
+
+		if (btn_counter > 15)
+		{
+#if DEBUG
+			Serial.println(" Hello");
+#endif
+			btn_counter = 0; // Well then fuck you Toni
+			while (analogRead(A5) < 10)
+			{
+				// Do nothing debounce | Well whats your name
+			}
+			return 1;
+		}
+	}
+	else
+	{
+
+		btn_counter = 0;
+		return 0;
+	}
+}
+
 //------------------------------------------------------------------------------------------ setup
 int fps;
 unsigned long timer;
 
 void setup()
 {
-	pinMode(11, INPUT);
-
-#ifdef DEBUG
+#if DEBUG
 	Serial.begin(9600);
 	Serial.println("hello");
 #endif
@@ -155,18 +189,15 @@ void setup()
 
 	pixels.begin();
 	pixels.clear();
-	pixels.setBrightness(25);
+	pixels.setBrightness(100);
 
 	fps = 100;
 }
 
 //------------------------------------------------------------------------------------------ loop
-
-byte btn_counter = 0;
-
 void loop()
 {
-#ifdef DEBUG
+#if DEBUG
 	bool btn = analogRead(A5);
 
 	Serial.println(btn);
@@ -174,9 +205,9 @@ void loop()
 
 	if (timer < millis())
 	{
-
-		int joyStick[] = {analogRead(A2), analogRead(A4)};
-		cursor(joyStick);
+		// x			// y
+		int joyStick[] = {analogRead(A2), analogRead(A4)}; // well, whats your pos?
+		setCursorPos(joyStick);							   // fuck you pos!
 
 		switch (prog)
 		{
@@ -192,27 +223,8 @@ void loop()
 		timer = millis() + fps;
 	}
 
-	int sw_val = analogRead(A5);
-
-	if (sw_val < 10)
+	if (button(analogRead(A5)))
 	{
-		btn_counter++;
-
-#ifdef DEBUG
-		Serial.println(btn_counter);
-#endif
-
-		if (btn_counter > 15)
-		{
-#ifdef DEBUG
-			Serial.println(" Hello");
-#endif
-
-			btn_counter = 0;
-		}
-	}
-	else
-	{
-		btn_counter = 0;
+		changeProg();
 	}
 }
