@@ -1,3 +1,8 @@
+//------------------------------------------------------------------------------------------ Hardware
+/*
+	all digitalpins are destroyed it seems...switch of joystick connected to A5 pressed == 0, otherwise random (debounce for random 0!)
+*/
+
 //------------------------------------------------------------------------------------------ Libraries
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
@@ -30,7 +35,7 @@ void matrix(byte *pos, byte *rgb)
 
 //------------------------------------------------------------------------------------------ Joystick
 
-byte pos[] = {6, 6};		 // middle
+byte pos[] = {6, 6};	  // middle
 byte rgb[] = {255, 0, 0}; // red
 
 void cursor(int *cursor)
@@ -60,8 +65,9 @@ void cursor(int *cursor)
 
 //------------------------------------------------------------------------------------------ programms
 //--------------------------------------------------- set Color
-void setColor(byte r, byte g, byte b){
-    rgb[0] = r;
+void setColor(byte r, byte g, byte b)
+{
+	rgb[0] = r;
 	rgb[1] = g;
 	rgb[2] = b;
 }
@@ -108,44 +114,44 @@ void debug()
 
 //------------------------------------------------------------------------------------------ change prog
 int prog = 0;
-int maxProgramms =2;
+int maxProgramms;
 volatile byte state = LOW;
 
 void changeProg()
 {
-	if(state){
-	if (prog < (maxProgramms-1))
+	if (state)
 	{
-		prog++;
+		if (prog < (maxProgramms - 1))
+		{
+			prog++;
+		}
+		else
+		{
+			prog = 0;
+		}
+
+		state = false;
 	}
 	else
 	{
-		prog = 0;
-	}
-
-	state = false;
-	}else{
 		state = true;
 	}
-	
 }
 
 //------------------------------------------------------------------------------------------ setup
-const byte interruptPin = 2; // interruptPin
-
-
 int fps;
 unsigned long timer;
+
 void setup()
 {
+	pinMode(11, INPUT);
 
-	#ifdef DEBUG
-		Serial.begin(9600);
-	#endif
+#ifdef DEBUG
+	Serial.begin(9600);
+	Serial.println("hello");
+#endif
 
-	maxProgramms = 1;
-	pinMode(interruptPin, INPUT);
-	attachInterrupt(digitalPinToInterrupt(interruptPin), changeProg, CHANGE);
+	maxProgramms = 2;
 
 	pixels.begin();
 	pixels.clear();
@@ -155,13 +161,16 @@ void setup()
 }
 
 //------------------------------------------------------------------------------------------ loop
+
+byte btn_counter = 0;
+
 void loop()
 {
-	#ifdef DEBUG
-		bool btn = digitalRead(5);
-    	bool val = digitalRead(2);
-    	Serial.println(btn + " | " + val);
-	#endif
+#ifdef DEBUG
+	bool btn = analogRead(A5);
+
+	Serial.println(btn);
+#endif
 
 	if (timer < millis())
 	{
@@ -172,7 +181,7 @@ void loop()
 		switch (prog)
 		{
 		case 0:
-			setColor(255,0,0);
+			setColor(255, 0, 0);
 			drawPoint(pos, rgb);
 			break;
 
@@ -181,5 +190,29 @@ void loop()
 			break;
 		}
 		timer = millis() + fps;
+	}
+
+	int sw_val = analogRead(A5);
+
+	if (sw_val < 10)
+	{
+		btn_counter++;
+
+#ifdef DEBUG
+		Serial.println(btn_counter);
+#endif
+
+		if (btn_counter > 15)
+		{
+#ifdef DEBUG
+			Serial.println(" Hello");
+#endif
+
+			btn_counter = 0;
+		}
+	}
+	else
+	{
+		btn_counter = 0;
 	}
 }
