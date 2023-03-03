@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------------------ Hardware
 /*
-	all digitalpins are destroyed it seems...switch of joystick connected to A5 pressed == 0, otherwise random (debounce for random 0!)
+	all digitalpins are destroyed it seems...switch of joystick connected to A5 pressed == 0, otherwise random (debounce for random 0!) is pulled high, pressed by val = 0; not pressed by val > 500
 */
 
 //------------------------------------------------------------------------------------------ Libraries
@@ -15,15 +15,11 @@
 #define NUMPIXELS 12 * 12
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-Matrix_Controll matrix = Matrix_Controll(pixels);
-Joystick joystick;
-
-//------------------------------------------------------------------------------------------ matrix vals
-// byte rgb[] = {255, 0, 0}; // red
+byte rgb[] = {255,0,0}; // red
 byte pos[] = {11,11}; // 12*12 matrix
 
-//------------------------------------------------------------------------------------------ programms
-// still empty =/
+Matrix_Controll matrix = Matrix_Controll(pixels);
+Joystick joystick;
 
 //------------------------------------------------------------------------------------------ debugging funcs
 #define DEBUG 0
@@ -76,6 +72,8 @@ void setup()
 	pixels.clear();
 	pixels.setBrightness(50);
 
+	matrix.setColor(255,0,0, rgb);
+
 	fps = 125;
 }
 
@@ -100,7 +98,7 @@ void loop()
 		switch (prog)
 		{
 		case 0:
-			matrix.setColor(255, 0, 0);
+			matrix.setColor(255, 0, 0, rgb);
 			matrix.drawPoint(pos,rgb) ;
 			break;
 
