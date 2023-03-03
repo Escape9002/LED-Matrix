@@ -121,57 +121,31 @@ volatile byte state = LOW;
 
 void changeProg()
 {
-	if (state)
+	if (prog < (maxProgramms - 1))
 	{
-		if (prog < (maxProgramms - 1))
-		{
-			prog++;
-		}
-		else
-		{
-			prog = 0;
-		}
-
-		state = false;
+		prog++;
 	}
 	else
 	{
-		state = true;
+		prog = 0;
 	}
+
+	state = false;
 }
 
 //------------------------------------------------------------------------------------------ check btn press
-byte btn_counter = 0;
 
-bool button(int sw_val)
+bool button(uint16_t sw_val)
 {
-	if (sw_val < 10)
+	if (sw_val < 100)
 	{
-		btn_counter++;
-
-#if DEBUG
-		Serial.println(btn_counter);
-#endif
-
-		if (btn_counter > 15)
+		while (analogRead(A5) < 100)
 		{
-#if DEBUG
-			Serial.println(" Hello");
-#endif
-			btn_counter = 0; // Well then fuck you Toni
-			while (analogRead(A5) < 10)
-			{
-				// Do nothing debounce | Well whats your name
-			}
-			return 1;
+			// Do nothing debounce | Well whats your name
 		}
+		return 1;
 	}
-	else
-	{
-
-		btn_counter = 0;
-		return 0;
-	}
+	return 0;
 }
 
 //------------------------------------------------------------------------------------------ setup
@@ -189,7 +163,7 @@ void setup()
 
 	pixels.begin();
 	pixels.clear();
-	pixels.setBrightness(100);
+	pixels.setBrightness(25);
 
 	fps = 100;
 }
@@ -202,6 +176,11 @@ void loop()
 
 	Serial.println(btn);
 #endif
+
+	if (button(analogRead(A5)))
+	{
+		changeProg();
+	}
 
 	if (timer < millis())
 	{
@@ -221,10 +200,5 @@ void loop()
 			break;
 		}
 		timer = millis() + fps;
-	}
-
-	if (button(analogRead(A5)))
-	{
-		changeProg();
 	}
 }
