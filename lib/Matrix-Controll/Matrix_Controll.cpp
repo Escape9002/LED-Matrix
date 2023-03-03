@@ -29,8 +29,8 @@ boolean Matrix_Controll::checkWall(byte *pos)
 void Matrix_Controll::setColor(byte r, byte g, byte b, byte* rgb)
 {
     rgb[0] = r;
-    rgb[1] = r;
-    rgb[2] = r;
+    rgb[1] = g;
+    rgb[2] = b;
 }
 
 void Matrix_Controll::drawPoint(byte *pos, byte *rgb)
