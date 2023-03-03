@@ -9,7 +9,7 @@
 #include <avr/power.h>
 
 #include "Joystick.h"
-#include "Matrix_Controll.h"
+#include "Matrix_Controll.h" //TODO spelling
 
 #define PIN 1
 #define NUMPIXELS 12 * 12
@@ -93,6 +93,7 @@ void loop()
 
 	if (timer < millis())
 	{	
+		//TODO implement Joystick state 
 		joystick.setCursorPos(analogRead(A2),analogRead(A4));							   // fuck you pos!
 
 		switch (prog)
