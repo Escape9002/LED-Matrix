@@ -1,6 +1,3 @@
-#ifndef H_Matrix_Controll;
-#define H_Matrix_Controll;
-
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 
@@ -15,5 +12,3 @@ public:
     void drawPoint(byte* pos, byte* rgb);
     void drawRainbow(byte* pos);
 };
-
-#endif
