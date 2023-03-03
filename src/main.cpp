@@ -9,7 +9,7 @@
 #include <avr/power.h>
 
 #include "Joystick.h"
-#include "Matrix_Controll.h" //TODO spelling
+#include "Matrix_Control.h"
 
 #define PIN 1
 #define NUMPIXELS 12 * 12
@@ -20,6 +20,7 @@ byte pos[] = {11,11}; // 12*12 matrix
 
 Matrix_Controll matrix = Matrix_Controll(pixels);
 Joystick joystick;
+enum joystickState joystick:JoystickStates;
 
 //------------------------------------------------------------------------------------------ debugging funcs
 #define DEBUG 0
@@ -93,12 +94,23 @@ void loop()
 
 	if (timer < millis())
 	{	
+		switch(joystickState){
+		case joystickState::UP:
+		break;
+		case DOWN:
+		break;
+		case LEFT:
+		break;
+		case RIGHT:
+		break;
+	}
 		//TODO implement Joystick state 
 		joystick.setCursorPos(analogRead(A2),analogRead(A4));							   // fuck you pos!
 
 		switch (prog)
 		{
 		case 0:
+
 			matrix.setColor(255, 0, 0, rgb);
 			matrix.drawPoint(pos,rgb) ;
 			break;

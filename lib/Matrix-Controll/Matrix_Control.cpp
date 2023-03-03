@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Matrix_Controll.h"
+#include "Matrix_Control.h"
 
 Adafruit_NeoPixel pixel;
 byte rainbow_rgb[3];
