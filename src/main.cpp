@@ -8,36 +8,56 @@
 #include <Adafruit_NeoPixel.h>
 #include <avr/power.h>
 
+#include "Joystick.h"
+#include "Matrix_Controll.h"
+
 #define PIN 1
 #define NUMPIXELS 12 * 12
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 //------------------------------------------------------------------------------------------ matrix Functions
+byte rgb[] = {255, 0, 0}; // red
+byte pos[] = {11,11}; // 12*12 matrix
 
-int generatepos(byte x, byte y)
+//--------------------------------------------------- set Color
+void setColor(byte r, byte g, byte b)
 {
-
-	if (y % 2 == 1)
-	{
-		return ((11 - x) + 12 * y);
-	}
-	else
-	{
-		return (x + 12 * y);
-	}
+	rgb[0] = r;
+	rgb[1] = g;
+	rgb[2] = b;
 }
 
-void matrix(byte *pos, byte *rgb)
+//--------------------------------------------------- draw point
+void drawPoint(byte *pos, byte *rgb)
 {
-	pixels.setPixelColor(generatepos(pos[0], pos[1]), pixels.Color(rgb[0], rgb[1], rgb[2]));
+	pixels.setPixelColor(generatePos(pos[0], pos[1]), pixels.Color(rgb[0], rgb[1], rgb[2]));
+	pixels.show();
+}
+
+//--------------------------------------------------- draw rainbow point
+
+void drawRainbow(byte *pos)
+{
+	rgb[0] = rgb[0] + 5;
+	rgb[1] = rgb[1] + 25;
+	rgb[2] = rgb[2] + 50;
+
+	for (byte i = 3; i > 0; i--)
+	{
+		if (rgb[i] > 255)
+		{
+			rgb[i] = 0;
+		}
+	}
+
+	drawPoint(pos, rgb);
 }
 
 //------------------------------------------------------------------------------------------ Joystick
 
-byte pos[] = {6, 6};	  // middle
-byte rgb[] = {255, 0, 0}; // red
-
+//byte pos[] = {6, 6};	  // middle
+/*
 void setCursorPos(int *cursor)
 {
 	for (byte i = 0; i < 2; i++)
@@ -63,42 +83,10 @@ void setCursorPos(int *cursor)
 			}
 		}
 	}
-}
+}*/
 
 //------------------------------------------------------------------------------------------ programms
-//--------------------------------------------------- set Color
-void setColor(byte r, byte g, byte b)
-{
-	rgb[0] = r;
-	rgb[1] = g;
-	rgb[2] = b;
-}
-
-//--------------------------------------------------- draw point
-void drawPoint(byte *pos, byte *rgb)
-{
-	pixels.setPixelColor(generatepos(pos[0], pos[1]), pixels.Color(rgb[0], rgb[1], rgb[2]));
-	pixels.show();
-}
-
-//--------------------------------------------------- draw rainbow point
-
-void drawRainbow(byte *pos)
-{
-	rgb[0] = rgb[0] + 5;
-	rgb[1] = rgb[1] + 25;
-	rgb[2] = rgb[2] + 50;
-
-	for (byte i = 3; i > 0; i--)
-	{
-		if (rgb[i] > 255)
-		{
-			rgb[i] = 0;
-		}
-	}
-
-	drawPoint(pos, rgb);
-}
+// still empty =/
 
 //------------------------------------------------------------------------------------------ debugging funcs
 #define DEBUG 0
