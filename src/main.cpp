@@ -42,7 +42,7 @@ void setCursorPos(int *cursor)
 {
 	for (byte i = 0; i < 2; i++)
 	{
-		if (cursor[i] < 200)
+		if (cursor[i] < 400)
 		{
 
 			pos[i] = pos[i] + 1;
@@ -51,7 +51,7 @@ void setCursorPos(int *cursor)
 				pos[i] = 11;
 			}
 		}
-		else if (cursor[i] > 800)
+		else if (cursor[i] > 600)
 		{
 			if (pos[i] != 0)
 			{
@@ -103,17 +103,6 @@ void drawRainbow(byte *pos)
 //------------------------------------------------------------------------------------------ debugging funcs
 #define DEBUG 0
 
-void debug()
-{
-	for (byte i = 0; i < 13; i++)
-	{
-		pos[0] = i;
-		pos[1] = i;
-		drawPoint(pos, rgb);
-		delay(100);
-	}
-}
-
 //------------------------------------------------------------------------------------------ change prog
 int prog = 0;
 int maxProgramms;
@@ -149,7 +138,7 @@ bool button(uint16_t sw_val)
 }
 
 //------------------------------------------------------------------------------------------ setup
-int fps;
+int fps;	// higher value, slower game, so 1/fps
 unsigned long timer;
 
 void setup()
@@ -163,9 +152,9 @@ void setup()
 
 	pixels.begin();
 	pixels.clear();
-	pixels.setBrightness(25);
+	pixels.setBrightness(50);
 
-	fps = 100;
+	fps = 125;
 }
 
 //------------------------------------------------------------------------------------------ loop
@@ -192,7 +181,7 @@ void loop()
 		{
 		case 0:
 			setColor(255, 0, 0);
-			drawPoint(pos, rgb);
+			drawPoint(pos,rgb) ;
 			break;
 
 		case 1:
