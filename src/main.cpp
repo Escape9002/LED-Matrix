@@ -15,12 +15,11 @@
 #define NUMPIXELS 12 * 12
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-byte rgb[] = {255,0,0}; // red
-byte pos[] = {11,11}; // 12*12 matrix
+byte rgb[] = {255, 0, 0}; // red
+byte pos[] = {6, 6};	  // 12*12 matrix
 
 Matrix_Controll matrix = Matrix_Controll(pixels);
 Joystick joystick;
-enum joystickState joystick:JoystickStates;
 
 //------------------------------------------------------------------------------------------ debugging funcs
 #define DEBUG 0
@@ -57,7 +56,7 @@ bool button(uint16_t sw_val)
 }
 
 //------------------------------------------------------------------------------------------ setup
-int fps;	// higher value, slower game, so 1/fps
+int fps; // higher value, slower game, so 1/fps
 unsigned long timer;
 
 void setup()
@@ -73,7 +72,7 @@ void setup()
 	pixels.clear();
 	pixels.setBrightness(50);
 
-	matrix.setColor(255,0,0, rgb);
+	matrix.setColor(255, 0, 0, rgb);
 
 	fps = 125;
 }
@@ -93,26 +92,16 @@ void loop()
 	}
 
 	if (timer < millis())
-	{	
-		switch(joystickState){
-		case joystickState::UP:
-		break;
-		case DOWN:
-		break;
-		case LEFT:
-		break;
-		case RIGHT:
-		break;
-	}
-		//TODO implement Joystick state 
-		joystick.setCursorPos(analogRead(A2),analogRead(A4));							   // fuck you pos!
+	{
+		int cursorVals[] = {analogRead(A2), analogRead(A4)};
+		joystick.setCursorPos(pos, cursorVals);
 
 		switch (prog)
 		{
 		case 0:
 
 			matrix.setColor(255, 0, 0, rgb);
-			matrix.drawPoint(pos,rgb) ;
+			matrix.drawPoint(pos, rgb);
 			break;
 
 		case 1:

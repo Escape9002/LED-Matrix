@@ -9,6 +9,7 @@ Matrix_Controll::Matrix_Controll(Adafruit_NeoPixel pixels)
     pixel = pixels;
 }
 
+// accepts value from 0 to 11
 byte Matrix_Controll::generatePos(byte x, byte y)
 {
     if (y % 2 == 1)
