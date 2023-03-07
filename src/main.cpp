@@ -40,21 +40,6 @@ void changeProg()
 	}
 }
 
-//------------------------------------------------------------------------------------------ check btn press
-
-bool button(uint16_t sw_val)
-{
-	if (sw_val < 100)
-	{
-		while (analogRead(A5) < 100)
-		{
-			// Do nothing debounce | Well whats your name
-		}
-		return 1;
-	}
-	return 0;
-}
-
 //------------------------------------------------------------------------------------------ setup
 int fps; // higher value, slower game, so 1/fps
 unsigned long timer;
@@ -86,7 +71,7 @@ void loop()
 	Serial.println(btn);
 #endif
 
-	if (button(analogRead(A5)))
+	if (joystick.button(analogRead(A5), A5))
 	{
 		changeProg();
 	}
@@ -99,7 +84,6 @@ void loop()
 		switch (prog)
 		{
 		case 0:
-
 			matrix.setColor(255, 0, 0, rgb);
 			matrix.drawPoint(pos, rgb);
 			break;
