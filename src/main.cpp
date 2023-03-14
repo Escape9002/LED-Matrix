@@ -62,6 +62,9 @@ void setup()
 	fps = 125;
 }
 
+//------------------------------------------------------------------------------------------ games
+byte snake[6][6];
+
 //------------------------------------------------------------------------------------------ loop
 void loop()
 {
@@ -90,6 +93,20 @@ void loop()
 
 		case 1:
 			matrix.drawRainbow(pos);
+			break;
+
+		case 2:
+			while(!joystick.button(analogRead(A5), A5)){
+				int cursorVals[] = {analogRead(A2), analogRead(A4)};
+				joystick.setCursorPos(pos, cursorVals);
+				
+				// hier bitte pos values mit snake vals abgleichen...
+
+				snake[pos[0]][pos[1]] = 1;
+
+
+
+			}
 			break;
 		}
 		timer = millis() + fps;

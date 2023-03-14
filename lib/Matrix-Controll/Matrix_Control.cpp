@@ -22,11 +22,6 @@ byte Matrix_Controll::generatePos(byte x, byte y)
     }
 }
 
-boolean Matrix_Controll::checkWall(byte *pos)
-{
-    return 0;
-}
-
 void Matrix_Controll::setColor(byte r, byte g, byte b, byte* rgb)
 {
     rgb[0] = r;
