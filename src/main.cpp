@@ -21,9 +21,6 @@ byte pos[] = {6, 6};	  // 12*12 matrix
 Matrix_Controll matrix = Matrix_Controll(pixels);
 Joystick joystick;
 
-//------------------------------------------------------------------------------------------ Snake
-int debounce = 0;
-
 //------------------------------------------------------------------------------------------ Smileys to show ^^
 #include "Smileys.h"
 Smileys smileys;
@@ -32,16 +29,22 @@ byte smil = 0;
 byte smil_min = 0;
 byte smil_max = 3;
 
-void drawMatrix(bool matrixArr[12][12], byte* pos, byte* rgb){
-    for(int y = 0; y < 12; y++){
-		for(int x = 0; x < 12; x++){
+void drawMatrix(bool matrixArr[12][12], byte *pos, byte *rgb)
+{
+	for (int y = 0; y < 12; y++)
+	{
+		for (int x = 0; x < 12; x++)
+		{
 			pos[0] = x;
 			pos[1] = y;
 
-			if(matrixArr[x][y] == 1){
-				matrix.setColor(128,128,128,rgb);
-			}else{
-				matrix.setColor(0,0,64,rgb);
+			if (matrixArr[x][y] == 1)
+			{
+				matrix.setColor(128, 128, 128, rgb);
+			}
+			else
+			{
+				matrix.setColor(0, 0, 64, rgb);
 			}
 
 			matrix.drawPoint(pos, rgb);
@@ -78,7 +81,7 @@ void setup()
 	Serial.println("hello");
 #endif
 
-	maxProgramms = 4;
+	maxProgramms = 3;
 
 	pixels.begin();
 	pixels.clear();
@@ -87,10 +90,8 @@ void setup()
 	matrix.setColor(255, 0, 0, rgb);
 
 	fps = 125;
+	randomSeed(analogRead(0));
 }
-
-//------------------------------------------------------------------------------------------ games
-byte snake[6][6];
 
 //------------------------------------------------------------------------------------------ loop
 void loop()
@@ -123,42 +124,60 @@ void loop()
 			break;
 
 		case 2:
-			// hier bitte pos values mit snake vals abgleichen...
-			if (snake[pos[0]][pos[1]] == 1)
+			switch (joystick.getCursorDir(cursorVals[0], cursorVals[1]))
 			{
-				debounce++;
-				if (debounce > 10)
+			case joystick.UP:
+				if (smil < (smil_max - 1))
 				{
-					debounce = 0;
-					matrix.setColor(0, 0, 255, rgb);
-				}
-			}
-			else
-			{
-				matrix.setColor(255, 0, 0, rgb);
-				snake[pos[0]][pos[1]] = 1;
-			}
-			matrix.drawPoint(pos, rgb);
-			break;
-
-		case 3:
-			switch(joystick.getCursorDir(cursorVals[0], cursorVals[1])){
-				case joystick.UP:
-				if(smil < (smil_max-1)){
 					smil++;
-				}else{
+				}
+				else
+				{
 					smil = 0;
 				}
 				break;
-				case joystick.DOWN:
-				if(smil > smil_min){
+
+			case joystick.DOWN:
+				if (smil > smil_min)
+				{
 					smil--;
-				}else{
-					smil = smil_max-1;
+				}
+				else
+				{
+					smil = smil_max - 1;
+				}
+				break;
+
+			case joystick.LEFT:
+				rgb[0] = rgb[0] + 5;
+				rgb[1] = rgb[1] + 25;
+				rgb[2] = rgb[2] + 50;
+
+				for (byte i = 3; i > 0; i--)
+				{
+					if (rgb[i] > 255)
+					{
+						rgb[i] = 0;
+					}
+				}
+
+				break;
+
+			case joystick.RIGHT:
+				rgb[0] = rgb[0] - 5;
+				rgb[1] = rgb[1] - 25;
+				rgb[2] = rgb[2] - 50;
+
+				for (byte i = 3; i > 0; i--)
+				{
+					if (rgb[i] < 0)
+					{
+						rgb[i] = 255;
+					}
 				}
 				break;
 			}
-			drawMatrix(smileys.SmileArray[smil],pos,rgb);
+			drawMatrix(smileys.SmileArray[smil], pos, rgb);
 			break;
 		}
 		timer = millis() + fps;
