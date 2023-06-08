@@ -19,7 +19,18 @@ byte rgb[] = {255, 0, 0}; // red
 byte pos[] = {6, 6};	  // 12*12 matrix
 
 Matrix_Controll matrix = Matrix_Controll(pixels);
+
 Joystick joystick;
+int delayval = 10;
+int yPin = A4;
+int xPin = A2;
+
+int courser[] = {5,5};
+int weg[144][2];
+int wegindex = 0;
+int rgb[] = {0,255,0};
+boolean isrunning =true;
+
 
 //------------------------------------------------------------------------------------------ Smileys to show ^^
 #include "Smileys.h"
@@ -31,12 +42,14 @@ byte smil_max = 3;
 
 void drawMatrix(bool matrixArr[12][12], byte *pos, byte *rgb)
 {
+
 	for (int y = 0; y < 12; y++)
 	{
 		for (int x = 0; x < 12; x++)
 		{
 			pos[0] = x;
 			pos[1] = y;
+    }
 
 			if (matrixArr[x][y] == 1)
 			{
@@ -93,9 +106,11 @@ void setup()
 	randomSeed(analogRead(0));
 }
 
+
 //------------------------------------------------------------------------------------------ loop
 void loop()
 {
+
 #if DEBUG
 	bool btn = analogRead(A5);
 
@@ -182,4 +197,71 @@ void loop()
 		}
 		timer = millis() + fps;
 	}
+}
+
+
+
+
+
+while(isrunning == true){
+// Begin Move-Check
+	if(analogRead(yPin) != 511){
+		if(analogRead(yPin) < 411){
+			if(courser[1] != 11){
+				courser[1] ++;
+				
+			}
+		}
+		if(analogRead(yPin) > 611){
+			if(courser[1] != 0){
+				courser[1] --;
+				
+			}
+		}
+	}
+	if(analogRead(xPin) != 526){
+		if(analogRead(xPin) < 426){
+			if(courser[0] != 11){
+				courser[0] ++;
+				
+			}
+		}
+		if(analogRead(xPin) > 611){
+			if(courser[0] != 0){
+				courser[0] --;
+				
+			}
+		}
+	}	
+
+	drawPoint(courser,rgb);
+
+	pixels.show();
+	delay(100);
+	// End Move-Check
+
+pixels.show();
+// Weg Schreiben	
+	if((weg[wegindex][0] != courser[0]) || (weg[wegindex][1] != courser[1] )){
+		weg[wegindex+1][0] = courser[0];
+		weg[wegindex+1][1] = courser[1];
+	}
+//Kollision
+ 	for(int f = 0; f <= wegindex;  f++ ){
+		if((weg[f][0] == courser[0]) && (weg[f][1]== courser [1])){
+			isrunning =false;
+			pixels.clear();
+		}
+	}
+}
+while(isrunning ==false){
+	for(int i =0; i < 25; i++){
+	pixels.fill(pixels.Color(255,0,0),0,144);pixels.show();
+	delay(100);
+	pixels.clear();pixels.show();
+	delay(100);
+	}
+	
+
+}
 }
